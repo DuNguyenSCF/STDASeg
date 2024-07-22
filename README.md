@@ -13,4 +13,6 @@ STDASeg is based on following repos. We thanks for their great works:<br/>
 - [SSL4MIS](https://github.com/HiLab-git/SSL4MIS)<br/>
 - [MaxSquareLoss](https://github.com/ZJULearning/MaxSquareLoss)<br/>
 - [BCDM](https://github.com/BIT-DA/BCDM)<br/>
+- [DoveNet](https://github.com/bcmi/Image-Harmonization-Dataset-iHarmony4)<br/>
+- [FPIE](https://github.com/Trinkle23897/Fast-Poisson-Image-Editing)<br/>
 
