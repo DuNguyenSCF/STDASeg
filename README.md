@@ -3,7 +3,7 @@ This repository is dedicated to sharing the materials and code related to our **
 a self-training framework for domain adaptive crack segmentation (STDASeg) is proposed. STDASeg aims to enhance crack detection in civil infrastructure by leveraging image *blending-based techniques for domain mixing* and *CNN-Transformer mutual learning for self-training*, eliminating the need for extensive manual labeling. 
 
 ## Overall framework
-<img src="./Figure_02_DASeg_overall_mod.jpeg" width = 90% alt="Visual comparison of the segmentation results." align=center />
+<img src="./Figure_02_DASeg_overall_mod.jpg" width = 90% alt="Visual comparison of the segmentation results." align=center />
 ### Visualization of the proposed  C-TML.
 
 ## Acknowledgment
