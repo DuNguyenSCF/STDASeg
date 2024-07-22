@@ -15,4 +15,5 @@ STDASeg is based on following repos. We thanks for their great works:<br/>
 - [BCDM](https://github.com/BIT-DA/BCDM)<br/>
 - [DoveNet](https://github.com/bcmi/Image-Harmonization-Dataset-iHarmony4)<br/>
 - [FPIE](https://github.com/Trinkle23897/Fast-Poisson-Image-Editing)<br/>
+- [Segmentation Models Pytorch](https://github.com/qubvel-org/segmentation_models.pytorch)<br/>
 
