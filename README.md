@@ -5,7 +5,7 @@ a self-training framework for domain adaptive crack segmentation (STDASeg) is pr
 ## Overall framework
 <img src="./Figure_02_DASeg_overall_mod.jpg" width = 90% alt="Visual comparison of the segmentation results." align=center />
 
-### Visualization of the proposed  C-TML.
+### Visualization of the proposed self-training framework (C-TML).
 <img src="./Figure_04_CTML_framework.jpg" width = 90% alt="Visual comparison of the segmentation results." align=center />
 
 ## Acknowledgment
