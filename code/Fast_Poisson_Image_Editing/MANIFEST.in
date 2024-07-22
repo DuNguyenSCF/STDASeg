@@ -1,0 +1,3 @@
+include CMakeLists.txt
+include cmake_modules/*.cmake
+recursive-include fpie CMakeLists.txt *.h *.cc *.cu
