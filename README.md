@@ -8,10 +8,6 @@ a self-training framework for domain adaptive crack segmentation (STDASeg) is pr
 ### Visualization of the proposed  C-TML.
 <img src="./Figure_04_CTML_framework.jpg" width = 90% alt="Visual comparison of the segmentation results." align=center />
 
-## Training
-### Pretrained checkpoints for ViT in TRansUNet, SwinTransformer in SwinUNet, DoveNet (for generating crack data)
-Download from from [this](https://drive.google.com/file/d/12og9wIZUHFB6cxNB_AkU8PWcEdkqqb2Y/view?usp=drive_link) link. and extract to the folder "code"
-
 ## Acknowledgment
 STDASeg is based on following repos. We thanks for their great works:<br/>
 - [SSL4MIS](https://github.com/HiLab-git/SSL4MIS)<br/>
