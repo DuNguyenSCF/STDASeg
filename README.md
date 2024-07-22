@@ -9,7 +9,7 @@ a self-training framework for domain adaptive crack segmentation (STDASeg) is pr
 <img src="./Figure_04_CTML_framework.jpg" width = 90% alt="Visual comparison of the segmentation results." align=center />
 
 ## Training
-### Pretrained checkpoint for Vit in TRansUNet, SwinTransformer in SwinUNet, DoveNet (for generate crack data)
+### Pretrained checkpoint for ViT in TRansUNet, SwinTransformer in SwinUNet, DoveNet (for generating crack data)
 Dowload from from [this](https://drive.google.com/file/d/12og9wIZUHFB6cxNB_AkU8PWcEdkqqb2Y/view?usp=drive_link) link. and extract to the folder "code"
 
 ## Acknowledgment
