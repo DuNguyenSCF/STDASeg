@@ -1,14 +1,18 @@
 import sys
 sys.path.insert(0, '/data/gpfs/projects/punim1699/data_dunguyen/Codes_github/SSL4MIS/code/modules_models/')
+sys.path.insert(1, '/data/gpfs/projects/punim1699/data_dunguyen/Codes_github/SSL4MIS/code/networks/')
 import time
-from networks.efficientunet import Effi_UNet
+# from networks.efficientunet import Effi_UNet
 from networks.enet import ENet
 from networks.pnet import PNet2D
 from networks.unet import UNet, UNet_mod, UNet_DS, UNet_URPC, UNet_CCT
 from networks.STRNet import STRNet, CTCNet
+from networks.kan_nets import UKAN, LKAN_UNet
 # from networks.SemiCrack import CCTNet
 import argparse
-from networks.vision_transformer import SwinUnet as SwinU
+from networks.vision_transformer import SwinUnet as SwinV1UNet
+from networks.vision_transformer import SwinV2Unet as SwinV2UNet
+from networks.vision_transformer_kan import Swinv2KanU as SwinV2KanUNet
 from networks.config import get_config
 from networks.nnunet import initialize_network
 import numpy as np
@@ -16,14 +20,14 @@ from networks.vit_seg_modeling import VisionTransformer as TransU
 from networks.vit_seg_modeling import CONFIGS as CONFIGS_ViT_seg
 
 import modules_models
-from modules_models.Unet_SeResnext_model import Unet_SeResnext
-from modules_models.Unet_Vgg_model import Unet_Vgg
-from modules_models.Unet_EfficicentNet_model import Unet_EfficientNet
-from modules_models.Unet_MobileNet_model import Unet_mobilenet_v2
-from modules_models.Unet_MixTransformer_model import Unet_SegFormer
-from modules_models.DeeplabV3_SeResnext_model import DeepLabV3Plus_SeResnext
-from modules_models.Linknet_SeResnext_model import Linknet
-from modules_models.Swinv2_Unet import swin_unet
+# from modules_models.Unet_SeResnext_model import Unet_SeResnext
+# from modules_models.Unet_Vgg_model import Unet_Vgg
+# # from modules_models.Unet_EfficicentNet_model import Unet_EfficientNet
+# from modules_models.Unet_MixTransformer_model import Unet_SegFormer
+# from modules_models.DeeplabV3_SeResnext_model import DeepLabV3Plus_SeResnext
+from modules_models.Swinv2_Unet import swin_unet, swinv2_unet_nopretrain
+
+from yacs.config import CfgNode as CN
 
 
 
@@ -100,6 +104,53 @@ args = parser.parse_args("")
 # args = parser.parse_args()
 config = get_config(args)
 
+swin_config = CN()
+swin_config.DATA = CN()
+swin_config.MODEL = CN()
+swin_config.MODEL.SWIN = CN()
+swin_config.TRAIN = CN()
+# Base config files
+swin_config.BASE = ['']
+swin_config.DATA.IMG_SIZE = args.patch_size[0]
+swin_config.MODEL.SWIN.PATCH_SIZE = 4
+swin_config.MODEL.SWIN.IN_CHANS = 3
+swin_config.MODEL.SWIN.EMBED_DIM = 96
+swin_config.MODEL.SWIN.DEPTHS = [2, 2, 6, 2]
+swin_config.MODEL.SWIN.NUM_HEADS = [3, 6, 12, 24]
+swin_config.MODEL.SWIN.WINDOW_SIZE = 16 #if args.patch_size[0] == 512 else 8
+swin_config.MODEL.SWIN.MLP_RATIO = 4.
+swin_config.MODEL.SWIN.QKV_BIAS =True
+swin_config.MODEL.SWIN.QK_SCALE = False
+swin_config.MODEL.DROP_RATE = 0.0
+swin_config.MODEL.DROP_PATH_RATE = 0.1
+swin_config.MODEL.SWIN.APE = False
+swin_config.MODEL.SWIN.PATCH_NORM = True
+swin_config.TRAIN.USE_CHECKPOINT = False
+
+
+swinv2_config = CN()
+swinv2_config.DATA = CN()
+swinv2_config.MODEL = CN()
+swinv2_config.MODEL.SWIN = CN()
+swinv2_config.TRAIN = CN()
+# Base config files
+swinv2_config.BASE = ['']
+swinv2_config.DATA.IMG_SIZE = args.patch_size[0]
+swinv2_config.MODEL.SWIN.PATCH_SIZE = 4
+swinv2_config.MODEL.SWIN.IN_CHANS = 3
+swinv2_config.MODEL.SWIN.EMBED_DIM = 128
+swinv2_config.MODEL.SWIN.DEPTHS = [1, 1, 1, 2]
+swinv2_config.MODEL.SWIN.NUM_HEADS = [4, 8, 16, 32]
+swinv2_config.MODEL.SWIN.WINDOW_SIZE = 16 if args.patch_size[0] == 512 else 8
+swinv2_config.MODEL.SWIN.MLP_RATIO = 4.
+swinv2_config.MODEL.SWIN.QKV_BIAS =True
+swinv2_config.MODEL.SWIN.QK_SCALE = False
+swinv2_config.MODEL.DROP_RATE = 0.0
+swinv2_config.MODEL.DROP_PATH_RATE = 0.1
+swinv2_config.MODEL.SWIN.APE = False
+swinv2_config.MODEL.SWIN.PATCH_NORM = True
+swinv2_config.TRAIN.USE_CHECKPOINT = False
+
 
 # def net_factory(net_type="unet", in_chns=1, class_num=3):
 #     if net_type == "unet":
@@ -137,6 +188,14 @@ def net_factory(net_type="unet", in_chns=1, class_num=2, weights = None):
         print(f'Creating {net_type} model...!')
         net = UNet_mod(in_chns=in_chns, class_num=class_num).cuda()
         
+    elif net_type == "ukan":
+        print(f'Creating {net_type} model...!')
+        net = UKAN(num_classes=class_num, img_size = args.patch_size[0]).cuda()
+    
+    elif net_type == "lkan_unet":
+        print(f'Creating {net_type} model...!')
+        net = LKAN_UNet(num_classes=class_num, img_size = args.patch_size[0]).cuda()
+        
     elif net_type == "seresnext_unet":
         print(f'Creating {net_type} model...!')
         net = Unet_SeResnext(encoder_name='se_resnext50_32x4d', encoder_weights = weights, in_channels=in_chns, classes=class_num).cuda()
@@ -149,15 +208,7 @@ def net_factory(net_type="unet", in_chns=1, class_num=2, weights = None):
         print(f'Creating {net_type} model...!')
         net = Unet_EfficientNet(encoder_name='efficientnet-b5', encoder_weights = weights, in_channels=in_chns, classes=class_num).cuda()
         
-    elif net_type == "mobi_unet":
-        print(f'Creating {net_type} model...!')
-        net = Unet_mobilenet_v2(encoder_name='mobilenet_v2', encoder_weights = weights, in_channels=in_chns, classes=class_num).cuda()
-        
     elif net_type == "deeplabv3":
-        print(f'Creating {net_type} model...!')
-        net = DeepLabV3Plus_SeResnext(encoder_name='se_resnext50_32x4d', encoder_weights = weights, in_channels=in_chns, classes=class_num).cuda()
-        
-    elif net_type == "linknet":
         print(f'Creating {net_type} model...!')
         net = DeepLabV3Plus_SeResnext(encoder_name='se_resnext50_32x4d', encoder_weights = weights, in_channels=in_chns, classes=class_num).cuda()
         
@@ -174,11 +225,20 @@ def net_factory(net_type="unet", in_chns=1, class_num=2, weights = None):
     #     net = Effi_UNet('efficientnet-b3', encoder_weights='imagenet',
     #                     in_channels=in_chns, classes=class_num).cuda()
         
-    # elif net_type == "SwinU":
-    #     print(f'Creating {net_type} model...!')
-    #     net = SwinU(config, img_size=args.patch_size[0],
-    #                   num_classes=args.num_classes).cuda()
-    #     net.load_from(config)
+    elif net_type == "SwinV1U":
+        print(f'Creating {net_type} model...!')
+        net = SwinV1UNet(swin_config, img_size=args.patch_size[0],
+                      num_classes=args.num_classes).cuda()
+        # net.load_from(config)
+    elif net_type == "SwinV2U":
+        print(f'Creating {net_type} model...!')
+        net = SwinV2UNet(swinv2_config, img_size=args.patch_size[0],
+                      num_classes=args.num_classes).cuda()
+    elif net_type == "SwinV2KanU":
+        print(f'Creating {net_type} model...!')
+        net = SwinV2KanUNet(swinv2_config, img_size=args.patch_size[0],
+                      num_classes=args.num_classes).cuda()
+        
     elif net_type == "ctcn":
         print(f'Creating {net_type} model...!')
         net = CTCNet().cuda()
@@ -189,6 +249,13 @@ def net_factory(net_type="unet", in_chns=1, class_num=2, weights = None):
             net = swin_unet(size="swinv2_small_window8_256", img_size=args.patch_size[0]).cuda()
         elif args.patch_size[0] == 512:
             net = swin_unet(size="swinv2_base_window16_256", img_size=args.patch_size[0]).cuda()
+            
+    elif net_type == "Swinv2U_scratch":
+        print(f'Creating {net_type} model...!')
+        if args.patch_size[0] == 256:
+            net = swinv2_unet_nopretrain(size="swinv2_small_window8_256", img_size=args.patch_size[0]).cuda()
+        elif args.patch_size[0] == 512:
+            net = swinv2_unet_nopretrain(size="swinv2_base_window16_256", img_size=args.patch_size[0]).cuda()
         
     elif net_type == "TransU":
         print(f'Creating {net_type} model...!')
