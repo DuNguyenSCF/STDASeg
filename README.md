@@ -9,7 +9,8 @@ a self-training framework for domain adaptive crack segmentation (STDASeg) is pr
 <img src="./Figure_04_CTML_framework.jpg" width = 90% alt="Visual comparison of the segmentation results." align=center />
 
 ## Structured data for training and testing
-.\\
+```
+.
 ├── source_data				            : source concrete data for synthesizing new crack images \\
 │   ├── crack_images
 │   ├── crack_masks
@@ -29,7 +30,7 @@ a self-training framework for domain adaptive crack segmentation (STDASeg) is pr
 │   ├── crack_images
 │   ├── crack_masks
 ├── val_data.txt									: list of cropped target images for validation
-
+```
 ## Acknowledgment
 STDASeg is based on following repos. We thanks for their great works:<br/>
 - [SSL4MIS](https://github.com/HiLab-git/SSL4MIS)<br/>
