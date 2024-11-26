@@ -86,36 +86,6 @@ def create_model(args, type_model):
             
     return model
 
-# def create_model(args, type_model):
-    
-#     if type_model == 'TransU':
-#         print(f'Creating {type_model} model...!')
-#         config_vit = CONFIGS_ViT_seg[args.vit_name]
-#         config_vit.n_classes = args.num_classes
-#         config_vit.n_skip = args.n_skip
-#         if args.vit_name.find('R50') != -1:
-#             config_vit.patches.grid = (int(args.patch_size[0] / args.vit_patches_size), int(args.patch_size[0] / args.vit_patches_size))
-#             model = TransU(config_vit, img_size=args.patch_size[0], num_classes=config_vit.n_classes).cuda()
-#             model.load_from(weights=np.load(config_vit.pretrained_path))
-#     elif type_model == 'SwinU':
-#         print(f'Creating {type_model} model...!')
-#         if args.patch_size[0] == 256:
-#             model = swin_unet(size="swinv2_small_window8_256", img_size=args.patch_size[0]).cuda()
-#         elif args.patch_size[0] == 512:
-#             model = swin_unet(size="swinv2_base_window16_256", img_size=args.patch_size[0]).cuda()
-#     elif type_model == 'unet_mod':
-#         print(f'Creating {type_model} model...!')
-#         model = net_factory(net_type=type_model, in_chns=3, class_num=args.num_classes, weights = None)
-#     else: # for CNN models with pre-trained weights for encoder
-#         if args.load_pretrained_weights:
-#             model = net_factory(net_type=type_model, in_chns=3, class_num=args.num_classes, weights=args.encoder_weights)
-#         else:
-#             model = net_factory(net_type=type_model, in_chns=3, class_num=args.num_classes, weights = None)
-            
-#     return model
-
-# args.load_pretrained_weights = True
-# model = create_model(args, args.model)
         
 #########################################################################
 #######################  Loading models and training  ###################
