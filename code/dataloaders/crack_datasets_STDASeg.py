@@ -1242,14 +1242,16 @@ if args.valid_on_trg_domain:
                 )
 
 else:
-    print("Data for validating is from syn domain.")
+    print("Please set valid_on_trg_domain == True!!!")
     val_data = Val_DataSets(
                             base_dir=args.root_path,
-                            val_trg_filenames = None,
-                            val_syn_filenames = args.val_syn_filenames,
+                            # val_syn_filenames = args.val_syn_filenames,
+                            val_syn_filenames = None,
+                            val_trg_filenames = args.val_trg_filenames,
                             preprocessing=get_preprocessing(preprocessing_fn),
                             transform = val_transforms
                                     )
+    
     valloader = DataLoader(
                             val_data,
                             batch_size=args.val_batch_size, 
