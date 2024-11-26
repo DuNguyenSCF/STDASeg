@@ -171,7 +171,7 @@ class WindowAttention(nn.Module):
 
         # cosine attention
         attn = (F.normalize(q, dim=-1) @ F.normalize(k, dim=-1).transpose(-2, -1))
-        logit_scale = torch.clamp(self.logit_scale, max=torch.log(torch.tensor(1. / 0.01))).exp()
+        logit_scale = torch.clamp(self.logit_scale, max=torch.log(torch.tensor(1. / 0.01, device=self.logit_scale.device))).exp()
         attn = attn * logit_scale
 
         relative_position_bias_table = self.cpb_mlp(self.relative_coords_table).view(-1, self.num_heads)
@@ -1048,6 +1048,48 @@ class swin_unet(nn.Module):
         super().__init__()
 
         self.encoder = swin_v2(size=size,img_size=img_size)
+
+        if size.split("_")[1] in ["small","tiny"]:
+            feature_channels = (3,192,384,768,768)
+        elif size.split("_")[1] in ["base"]:
+            feature_channels = (3,256,512,1024,1024)
+        self.decoder = UnetDecoder(encoder_channels=feature_channels,n_blocks=4,decoder_channels=(512,256,128,64),attention_type=None)
+
+        self.segmentation_head = SegmentationHead(in_channels=64,out_channels=2,kernel_size=3,upsampling=4
+        )
+
+    def forward(self, input):
+        encoder_featrue = self.encoder.get_unet_feature(input)
+        decoder_output = self.decoder(*encoder_featrue)
+        masks = self.segmentation_head(decoder_output)
+
+        return masks
+    
+    
+def swin_v2_no_pretrain(size,img_size=256,in_22k=False, **kwargs):
+    if size=="swinv2_tiny_window16_256":
+        model = SwinTransformerV2(img_size=img_size,window_size=16,embed_dim=96,depths=[2, 2, 6, 2], num_heads=[3, 6, 12, 24], **kwargs)
+        print(f'No pretrained model: {size}')
+    elif size=="swinv2_small_window8_256":
+        model = SwinTransformerV2(img_size=img_size,window_size=8,embed_dim=96,depths=[2, 2, 18, 2], num_heads=[3, 6, 12, 24], **kwargs)
+        print(f'No pretrained model: {size}')
+    elif size=="swinv2_small_window16_256":
+        model = SwinTransformerV2(img_size=img_size,window_size=16,embed_dim=96,depths=[2, 2, 18, 2], num_heads=[3, 6, 12, 24], **kwargs)
+        print(f'No pretrained model: {size}')
+    elif size=="swinv2_base_window16_256":
+        model = SwinTransformerV2(img_size=img_size,window_size=16,embed_dim=128,depths=[2, 2, 18, 2], num_heads=[4, 8, 16, 32], **kwargs)
+        print(f'No pretrained model: {size}')
+
+    return model
+
+class swinv2_unet_nopretrain(nn.Module):
+
+    def __init__(
+        self,size="small",img_size=256 #"base" "large"
+    ):
+        super().__init__()
+
+        self.encoder = swin_v2_no_pretrain(size=size,img_size=img_size)
 
         if size.split("_")[1] in ["small","tiny"]:
             feature_channels = (3,192,384,768,768)
