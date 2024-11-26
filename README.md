@@ -9,7 +9,7 @@ a self-training framework for domain adaptive crack segmentation (STDASeg) is pr
 <img src="./Figure_04_CTML_framework.jpg" width = 90% alt="Visual comparison of the segmentation results." align=center />
 
 ## Structured data for training and testing
-.
+.\\
 ├── source_data				            : source concrete data for synthesizing new crack images \\
 │   ├── crack_images
 │   ├── crack_masks
