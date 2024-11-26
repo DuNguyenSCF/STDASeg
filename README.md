@@ -1,5 +1,5 @@
 # STDASeg
-This repository is dedicated to sharing the materials and code related to our ***under reviewed*** journal paper: "**Self-training method for structural crack detection using image blendingbased domain mixing and mutual learning (Quang Du Nguyen, Huu-Tai Thai, and Son Dong Nguyen)**". In this paper, 
+This repository is dedicated to sharing the materials and code related to our journal paper: "**Self-training method for structural crack detection using image blendingbased domain mixing and mutual learning (Quang Du Nguyen, Huu-Tai Thai, and Son Dong Nguyen)**", on **Automation in Construction**. In this paper, 
 a self-training framework for domain adaptive crack segmentation (STDASeg) is proposed. STDASeg aims to enhance crack detection in civil infrastructure by leveraging image *blending-based techniques for domain mixing* and *CNN-Transformer mutual learning for self-training*, eliminating the need for extensive manual labeling. 
 
 ## Overall framework
