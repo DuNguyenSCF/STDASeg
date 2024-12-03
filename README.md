@@ -11,11 +11,11 @@ a self-training framework for domain adaptive crack segmentation (STDASeg) is pr
 ## Structured data for training and testing
 ```
 .
-├── source_data (source concrete data for synthesizing new crack images)
+├── source_data (source data for synthesizing new crack images)
 │   ├── crack_images
 │   ├── crack_masks
 │   └── crack_masks_dilated (dilated masks to avoid lost crack boundary when blending)
-├── train_src_data.txt (list of source concrete images for synthesizing new data)
+├── train_src_data.txt (list of source images for synthesizing new data)
 ├── Testset (images and masks for testing)
 │   ├── crack_images
 │   ├── crack_masks
@@ -29,7 +29,7 @@ a self-training framework for domain adaptive crack segmentation (STDASeg) is pr
 ├── Validset (images and masks for validation)
 │   ├── crack_images
 │   ├── crack_masks
-├── val_data.txt (list of cropped target images for validation)
+├── val_data.txt (list of cropped images for validation)
 ```
 ## Acknowledgment
 STDASeg is based on following repos. We thanks for their great works:<br/>
