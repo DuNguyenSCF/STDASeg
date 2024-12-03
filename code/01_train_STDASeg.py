@@ -57,8 +57,6 @@ from dataloaders import crack_datasets_STDASeg
 from dataloaders.crack_datasets_STDASeg import src_trainloader,  trg_trainloader, valloader
 
 from networks.net_factory import net_factory
-from modules_models.Swinv2_Unet import swin_unet
-from networks.vit_seg_modeling import VisionTransformer as TransU
 from networks.vit_seg_modeling import CONFIGS as CONFIGS_ViT_seg
 from networks.SemiCrack import projectors, classifier
 from networks.discriminator import FCDiscriminator
@@ -77,7 +75,6 @@ from utils.losses import IW_MaxSquareloss, discrepancy_calc
 args = args_main_STDASeg.initialize_STDASeg_train_args()
 
 def create_model(args, type_model):
-    
     
     if args.load_pretrained_weights: # for CNN models with pre-trained weights for encoder
         model = net_factory(net_type=type_model, in_chns=3, class_num=args.num_classes, weights=args.encoder_weights)
