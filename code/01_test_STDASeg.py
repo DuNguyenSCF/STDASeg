@@ -52,8 +52,6 @@ import albumentations as albu
 from utils import args_main_STDASeg, helper_functions, losses, metrics, ramps
 
 from networks.net_factory import net_factory
-from modules_models.Swinv2_Unet import swin_unet
-from networks.vit_seg_modeling import VisionTransformer as TransU
 from networks.vit_seg_modeling import CONFIGS as CONFIGS_ViT_seg
 from networks.SemiCrack import projectors, classifier
 from networks.discriminator import FCDiscriminator
@@ -82,25 +80,10 @@ args = arg_parser.parse_args()
 # print(args)
 
 def create_model(args, type_model):
-    
-    if type_model == 'TransU':
-        print(f'Creating {type_model} model...!')
-        config_vit = CONFIGS_ViT_seg[args.vit_name]
-        config_vit.n_classes = args.num_classes
-        config_vit.n_skip = args.n_skip
-        if args.vit_name.find('R50') != -1:
-            config_vit.patches.grid = (int(args.patch_size[0] / args.vit_patches_size), int(args.patch_size[0] / args.vit_patches_size))
-            model = TransU(config_vit, img_size=args.patch_size[0], num_classes=config_vit.n_classes).cuda()
-            model.load_from(weights=np.load(config_vit.pretrained_path))
-    elif type_model == 'SwinU':
-        print(f'Creating {type_model} model...!')
-        if args.patch_size[0] == 256:
-            model = swin_unet(size="swinv2_small_window8_256", img_size=args.patch_size[0]).cuda()
-        elif args.patch_size[0] == 512:
-            model = swin_unet(size="swinv2_base_window16_256", img_size=args.patch_size[0]).cuda()
+    if args.load_pretrained_weights: # for CNN models with pre-trained weights for encoder
+        model = net_factory(net_type=type_model, in_chns=3, class_num=args.num_classes, weights=args.encoder_weights)
     else:
-        print(f'Creating {type_model} model...!')
-        model = net_factory(net_type=type_model, in_chns=3, class_num=args.num_classes, weights = None)
+        model = net_factory(net_type=type_model, in_chns=3, class_num=args.num_classes)
             
     return model
 
